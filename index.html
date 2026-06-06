@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미유 카페 키오스크 - MEOW CAFE</title>
+  <!-- Google Fonts for cute and readable typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Gowun+Dodum&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand" id="brand-logo">
+        <i class="fa-solid fa-cat brand-icon"></i>
+        <h1>MEOW CAFE</h1>
+        <span>미유 고양이 카페</span>
+      </div>
+      
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="order">
+          <i class="fa-solid fa-utensils"></i>
+          <span>주문하기</span>
+        </button>
+        <button class="nav-item" data-tab="cats">
+          <i class="fa-solid fa-paw"></i>
+          <span>고양이 소개</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="admin-login-btn" id="admin-login-trigger">
+          <i class="fa-solid fa-gear"></i>
+          <span>관리자 모드</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Tab 1: Order (Kiosk Main View) -->
+      <section class="tab-panel active" id="tab-order">
+        <div class="order-layout">
+          
+          <!-- Menu Selection Section -->
+          <div class="menu-section">
+            <header class="content-header">
+              <h2>메뉴 선택</h2>
+              <p>원하시는 메뉴 카테고리를 선택하고 상품을 담아보세요.</p>
+            </header>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+              <button class="category-tab active" data-category="time">
+                <i class="fa-solid fa-clock"></i> 이용 시간
+              </button>
+              <button class="category-tab" data-category="drink">
+                <i class="fa-solid fa-mug-hot"></i> 음료
+              </button>
+              <button class="category-tab" data-category="dessert">
+                <i class="fa-solid fa-cookie-bite"></i> 디저트
+              </button>
+              <button class="category-tab" data-category="treat">
+                <i class="fa-solid fa-fish"></i> 고양이 간식
+              </button>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="menu-grid" id="menu-items-container">
+              <!-- Menu items dynamically rendered here -->
+            </div>
+          </div>
+
+          <!-- Cart Summary Section -->
+          <div class="cart-section">
+            <div class="cart-header">
+              <h3><i class="fa-solid fa-basket-shopping"></i> 선택한 장바구니</h3>
+              <button class="clear-cart-btn" id="clear-cart-btn">비우기</button>
+            </div>
+
+            <div class="cart-items" id="cart-items-container">
+              <!-- Empty state message or cart items render here -->
+              <div class="cart-empty-state">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <p>장바구니가 비어 있습니다.<br>이용권을 선택하여 주문을 시작해 주세요!</p>
+              </div>
+            </div>
+
+            <div class="cart-footer">
+              <div class="total-row">
+                <span>총 주문 금액</span>
+                <span class="total-price" id="total-price-display">0원</span>
+              </div>
+              <button class="checkout-btn" id="checkout-btn" disabled>
+                <span>주문 완료 및 결제하기</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Tab 2: Cats Profile Gallery -->
+      <section class="tab-panel" id="tab-cats">
+        <div class="cats-section">
+          <header class="content-header">
+            <h2>우리 카페 고양이들 소개</h2>
+            <p>미유 카페에서 행복하게 상주하고 있는 사랑스러운 고양이 가족을 소개합니다!</p>
+          </header>
+
+          <div class="cats-grid" id="cats-container">
+            <!-- Cat profiles dynamically rendered here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: Admin Management Mode -->
+      <section class="tab-panel" id="tab-admin">
+        <div class="admin-section">
+          <header class="admin-header-row">
+            <div>
+              <h2>⚙️ 관리자 모드 설정</h2>
+              <p>카페의 메뉴와 고양이 프로필을 추가, 수정, 삭제하고 주문 로그를 확인할 수 있습니다.</p>
+            </div>
+            <button class="btn btn-secondary" id="exit-admin-btn">관리자 모드 종료</button>
+          </header>
+
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-admin-panel="menu">메뉴 관리</button>
+            <button class="admin-tab" data-admin-panel="cats">고양이 관리</button>
+          </div>
+
+          <!-- Admin Panel: Menu Management -->
+          <div class="admin-panel active" id="admin-panel-menu">
+            <div class="admin-split-layout">
+              <!-- List of Menus -->
+              <div class="admin-list-card">
+                <h3>등록된 메뉴 목록</h3>
+                <div class="admin-list" id="admin-menu-list">
+                  <!-- Dynamic menu items for editing -->
+                </div>
+              </div>
+              
+              <!-- Menu Form -->
+              <div class="admin-form-card">
+                <h3 id="menu-form-title">새 메뉴 추가</h3>
+                <form id="menu-form" onsubmit="return false;">
+                  <input type="hidden" id="menu-form-id">
+                  
+                  <div class="form-group">
+                    <label for="menu-name">상품명</label>
+                    <input type="text" id="menu-name" placeholder="예: 발바닥 초코라떼" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="menu-category">카테고리</label>
+                    <select id="menu-category" required>
+                      <option value="time">이용 시간</option>
+                      <option value="drink">음료</option>
+                      <option value="dessert">디저트</option>
+                      <option value="treat">고양이 간식</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="menu-price">가격 (원)</label>
+                    <input type="number" id="menu-price" min="0" placeholder="예: 4500" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="menu-description">상품 설명</label>
+                    <textarea id="menu-description" rows="3" placeholder="상품에 대한 짧은 설명을 입력하세요." required></textarea>
+                  </div>
+
+                  <div class="form-group row-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="menu-options-checkbox">
+                      <span>옵션 선택 제공 (음료: Hot/Ice, 간식: 주의사항 팝업)</span>
+                    </label>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="reset-menu-form-btn">취소</button>
+                    <button type="submit" class="btn btn-primary" id="save-menu-item-btn">메뉴 저장</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Panel: Cats Management -->
+          <div class="admin-panel" id="admin-panel-cats">
+            <div class="admin-split-layout">
+              <!-- List of Cats -->
+              <div class="admin-list-card">
+                <h3>등록된 고양이 목록</h3>
+                <div class="admin-list" id="admin-cats-list">
+                  <!-- Dynamic cat items for editing -->
+                </div>
+              </div>
+              
+              <!-- Cat Form -->
+              <div class="admin-form-card">
+                <h3 id="cat-form-title">새 고양이 등록</h3>
+                <form id="cat-form" onsubmit="return false;">
+                  <input type="hidden" id="cat-form-id">
+                  
+                  <div class="form-group">
+                    <label for="cat-name">고양이 이름</label>
+                    <input type="text" id="cat-name" placeholder="예: 치즈" required>
+                  </div>
+                  
+                  <div class="form-group-row">
+                    <div class="form-group">
+                      <label for="cat-gender">성별</label>
+                      <select id="cat-gender" required>
+                        <option value="여아">여아</option>
+                        <option value="남아">남아</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="cat-age">나이</label>
+                      <input type="text" id="cat-age" placeholder="예: 2세" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cat-breed">품종</label>
+                    <input type="text" id="cat-breed" placeholder="예: 스코티시 폴드" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cat-character">성격 요약</label>
+                    <input type="text" id="cat-character" placeholder="예: 무릎냥, 호기심쟁이" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cat-description">상세 설명 (소개글)</label>
+                    <textarea id="cat-description" rows="3" placeholder="성격이나 좋아하는 것 등의 상세한 소개글을 작성해 주세요." required></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cat-photo-select">고양이 이미지 대표 파일</label>
+                    <select id="cat-photo-select" required>
+                      <option value="assets/cat_navi.png">나비 (황색 태비 이미지)</option>
+                      <option value="assets/cat_mocha.png">모카 (러시안 블루 이미지)</option>
+                      <option value="assets/cat_cheese.png">치즈 (스코티시 폴드 이미지)</option>
+                      <option value="assets/cat_cloud.png">구름 (페르시안 화이트 이미지)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="reset-cat-form-btn">취소</button>
+                    <button type="submit" class="btn btn-primary" id="save-cat-btn">고양이 등록</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- MODALS & POPUPS -->
+
+  <!-- Modal 1: Drink Option Selector -->
+  <div class="modal-overlay" id="drink-option-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4>음료 옵션 선택</h4>
+        <button class="close-modal-btn" data-modal="drink-option"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <h3 id="drink-option-name" class="modal-item-title">음료 이름</h3>
+        <p id="drink-option-desc" class="modal-item-desc">음료 설명</p>
+        
+        <div class="option-group">
+          <h5>온도 선택</h5>
+          <div class="temp-options">
+            <label class="temp-radio hot">
+              <input type="radio" name="drink-temp" value="HOT" checked>
+              <div class="temp-card">
+                <i class="fa-solid fa-mug-hot"></i>
+                <span>따뜻하게 (HOT)</span>
+              </div>
+            </label>
+            <label class="temp-radio ice">
+              <input type="radio" name="drink-temp" value="ICE">
+              <div class="temp-card">
+                <i class="fa-solid fa-glass-water"></i>
+                <span>시원하게 (ICE)</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal-btn" data-modal="drink-option">취소</button>
+        <button class="btn btn-primary" id="confirm-drink-option-btn">장바구니 담기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Cat Treat Safety Consent Agreement -->
+  <div class="modal-overlay" id="treat-safety-modal">
+    <div class="modal-card treat-modal-card">
+      <div class="modal-header">
+        <h4 class="warning-title"><i class="fa-solid fa-triangle-exclamation"></i> 고양이 안전 급여 수칙 동의</h4>
+        <button class="close-modal-btn" data-modal="treat-safety"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="treat-warning-box">
+          <i class="fa-solid fa-paw warning-paw-icon"></i>
+          <h5>우리 카페 아이들의 건강을 위해 꼭 지켜주세요!</h5>
+          <ol class="safety-list">
+            <li><strong>급여량 준수:</strong> 고양이 간식은 고양이들의 소화 및 과체중 예방을 위해 테이블당 <strong>하루 최대 1~2개</strong>만 권장됩니다.</li>
+            <li><strong>적절한 급여 방식:</strong> 간식을 억지로 입에 밀어 넣거나 숟가락 없이 포장지째로 급여하면 아이들이 다칠 수 있습니다. 제공되는 스푼이나 그릇을 이용해 주세요.</li>
+            <li><strong>알레르기 및 주의 고양이:</strong> 카페 목에 <strong>"간식 금지 스카프"</strong>를 매고 있는 아이들에게는 절대 간식을 주시면 안 됩니다.</li>
+            <li><strong>외부 음식 절대 반입 금지:</strong> 사람이 먹는 음식이나 외부에서 사 온 고양이 간식은 아이들에게 치명적일 수 있어 급여를 금합니다.</li>
+          </ol>
+        </div>
+
+        <div class="consent-checkboxes">
+          <label class="checkbox-label styled-checkbox">
+            <input type="checkbox" id="consent-rule-1" required>
+            <span>상기 급여 제한량 및 안전 수칙을 준수하겠습니다. (필수)</span>
+          </label>
+          <label class="checkbox-label styled-checkbox">
+            <input type="checkbox" id="consent-rule-2" required>
+            <span>목에 색깔 스카프(간식 금지)를 맨 고양이에게는 급여하지 않겠습니다. (필수)</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal-btn" data-modal="treat-safety">취소</button>
+        <button class="btn btn-primary" id="confirm-treat-safety-btn" disabled>동의하고 장바구니 담기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Receipt (Order Completion Popup) -->
+  <div class="modal-overlay" id="receipt-modal">
+    <div class="modal-card receipt-modal-card">
+      <div class="modal-header">
+        <h4>🔔 주문 완료 (영수증 발행)</h4>
+        <button class="close-modal-btn" data-modal="receipt"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="receipt-success-message">
+          <i class="fa-regular fa-circle-check"></i>
+          <h3>주문이 정상 접수되었습니다!</h3>
+          <p>아래 영수증을 확인해 주시고, 카운터에서 음료와 주문서를 확인해 주세요.</p>
+        </div>
+
+        <!-- Paper Receipt Layout -->
+        <div class="paper-receipt-container">
+          <div class="paper-receipt">
+            <div class="receipt-brand">
+              <i class="fa-solid fa-cat"></i>
+              <h4>MEOW CAFE</h4>
+              <p>주문이 정상 완료되어 주문서 파일이 생성되었습니다.</p>
+            </div>
+            <div class="receipt-meta">
+              <div><span>주문번호:</span> <strong id="receipt-order-id">#0001</strong></div>
+              <div><span>주문시간:</span> <span id="receipt-order-date">2026-06-06 18:30:24</span></div>
+              <div id="receipt-file-status"><span>저장 파일명:</span> <span class="file-name">order_xxx.json</span></div>
+            </div>
+            
+            <table class="receipt-table">
+              <thead>
+                <tr>
+                  <th>상품명</th>
+                  <th class="text-center">수량</th>
+                  <th class="text-right">금액</th>
+                </tr>
+              </thead>
+              <tbody id="receipt-items-tbody">
+                <!-- Dynamic receipt items -->
+              </tbody>
+            </table>
+
+            <div class="receipt-total">
+              <span>총 결제금액</span>
+              <span id="receipt-total-price">0원</span>
+            </div>
+
+            <div class="receipt-footer">
+              <p>♥ 고양이와 함께 행복한 시간 되세요 ♥</p>
+              <div class="receipt-barcodes">
+                <div class="barcode-line"></div>
+                <div class="barcode-line thin"></div>
+                <div class="barcode-line"></div>
+                <div class="barcode-line thick"></div>
+                <div class="barcode-line"></div>
+                <div class="barcode-line thin"></div>
+                <div class="barcode-line thick"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-block" id="receipt-close-btn">처음 화면으로 돌아가기 (확인)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Admin Password Prompter -->
+  <div class="modal-overlay" id="admin-pass-modal">
+    <div class="modal-card password-modal-card">
+      <div class="modal-header">
+        <h4>🔒 관리자 모드 본인 인증</h4>
+        <button class="close-modal-btn" data-modal="admin-pass"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p>관리자 모드 진입을 위해 비밀번호를 입력해 주세요. (기본 비밀번호: 1234)</p>
+        <div class="form-group text-center">
+          <input type="password" id="admin-password-input" class="password-input" placeholder="비밀번호 입력" autofocus>
+          <p class="error-text" id="admin-pass-error" style="display: none;">비밀번호가 틀렸습니다. 다시 시도해 주세요.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal-btn" data-modal="admin-pass">취소</button>
+        <button class="btn btn-primary" id="confirm-admin-pass-btn">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
